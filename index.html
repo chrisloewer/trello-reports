@@ -49,22 +49,27 @@
 </script>
 
 <script id="charts" type="text/x-handlebars-template">
-  <div class="chart">
+  <div class="chart-container">
     <h2>{{name}}</h2>
 
-    <h3>Time Spread Chart</h3>
-    <div id="timespread-chart">
-      <object type="image/svg+xml" data="loading.svg" class="loading-icon"></object>
-    </div>
-
     <h3>Actions Chart</h3>
-    <div id="action-chart">
+    <div id="action-chart" class="chart">
       <object type="image/svg+xml" data="loading.svg" class="loading-icon"></object>
     </div>
+    <hr class="mini">
 
     <h3>Actions Table</h3>
     <div id="action-table">
       <object type="image/svg+xml" data="loading.svg" class="loading-icon"></object>
     </div>
+    <hr class="mini">
+
+    <h3>Time Spread Chart</h3>
+    <div id="timespread-chart">
+      <object type="image/svg+xml" data="loading.svg" class="loading-icon"></object>
+    </div>
+    <div id="timespread-table"></div>
+
+    <hr class="mini">
   </div>
 </script>

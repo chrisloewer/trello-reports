@@ -6,7 +6,8 @@ body {
   text-align: center; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif; }
+  font-family: 'Montserrat', sans-serif;
+  color: rgba(0, 0, 0, 0.85); }
 
 button {
   padding: 10px 20px;
@@ -21,7 +22,13 @@ select {
 hr {
   border: none;
   height: 2px;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.85);
   margin: 30px 0; }
+
+hr.mini {
+  height: 2px;
+  width: 50%;
+  margin: 60px auto;
+  background-color: #888888; }
 
 /*# sourceMappingURL=index.css.map */

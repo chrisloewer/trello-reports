@@ -2,7 +2,6 @@
 var boardID = '5767fa41ed4b0326883e368b';
 var resp = null;
 var minTime = new Date("2016-08-10T00:00:00.000Z");
-var tempTime = new Date("2016-08-17T00:00:00.000Z");
 
 var authenticationSuccess = function() { console.log('Successful authentication'); };
 var authenticationFailure = function() { console.log('Failed authentication'); };
@@ -59,8 +58,7 @@ var activityLoad = function() {
   var categoryCount = {};
   var timeArr = [['Time', 'Category']];
   var timeArrLegend = {};
-  var catIndex = 1;
-  var date = new Date;
+  var catIndex = 0;
 
   // Filter Data
   json = _.filter(json, function(o) {
@@ -74,15 +72,11 @@ var activityLoad = function() {
           categoryCount[o.type]++;
         }
 
-        if(d > tempTime) {
-          if (timeArrLegend[o.type] == undefined) {
-            timeArrLegend[o.type] = catIndex;
-            catIndex++;
-          }
-          timeArr.push([d.getTime(), timeArrLegend[o.type]]);
+        if (timeArrLegend[o.type] == undefined) {
+          timeArrLegend[o.type] = catIndex;
+          catIndex++;
         }
-
-
+        timeArr.push([d.getTime(), timeArrLegend[o.type]]);
         return o;
       }
     }
@@ -99,6 +93,15 @@ var activityLoad = function() {
   }
   data.sort('Label');
 
+  var categoryLegend = new google.visualization.DataTable();
+  categoryLegend.addColumn('number', 'Action');
+  categoryLegend.addColumn('string', 'Type');
+  for(var p in timeArrLegend) {
+    categoryLegend.addRows([
+      [timeArrLegend[p], p]
+    ]);
+  }
+
   var timeData = google.visualization.arrayToDataTable(timeArr);
 
   var options = {
@@ -109,9 +112,11 @@ var activityLoad = function() {
 
   var timeOptions = {
     hAxis: {title: 'Time'},
+    vAxis: {title: 'Category'},
     height: 500,
     legend: 'none',
-    pointSize: 1
+    pointSize: 4,
+    explorer: { actions: ['dragToZoom', 'rightClickToReset'] }
   };
 
   // Instantiate and draw our chart, passing in some options.
@@ -121,10 +126,11 @@ var activityLoad = function() {
   table.draw(data, {});
 
   var timeChart = new google.visualization.ScatterChart(document.getElementById('timespread-chart'));
+  var timeTable = new google.visualization.Table(document.getElementById('timespread-table'));
   timeChart.draw(timeData, timeOptions);
+  timeTable.draw(categoryLegend, {});
 
   console.log(json);
-  console.log(categoryCount);
 };
 
 
