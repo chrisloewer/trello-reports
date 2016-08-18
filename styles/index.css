@@ -9,12 +9,18 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', sans-serif;
   color: rgba(0, 0, 0, 0.85); }
 
+h1 {
+  font-size: 38px; }
+
+h3 {
+  margin: 5px 0; }
+
 button {
   padding: 10px 20px;
   margin: 20px;
   background: #DDD; }
 
-select {
+select, input {
   padding: 5px 10px;
   margin: 10px;
   min-width: 200px; }
@@ -30,5 +36,9 @@ hr.mini {
   width: 50%;
   margin: 60px auto;
   background-color: #888888; }
+
+.note {
+  font-size: 0.8em;
+  font-style: italic; }
 
 /*# sourceMappingURL=index.css.map */

@@ -15,6 +15,12 @@ h1, h2, h3, h4, h5, h6 {
   color: $black-1;
 }
 
+h1 {
+  font-size: 38px;
+}
+h3 {
+  margin: 5px 0;
+}
 
 button {
   padding: 10px 20px;
@@ -22,7 +28,7 @@ button {
   background: #DDD;
 }
 
-select {
+select, input {
   padding: 5px 10px;
   margin: 10px;
   min-width: 200px;
@@ -40,4 +46,9 @@ hr.mini {
   width: 50%;
   margin: 60px auto;
   background-color: $gray-1;
+}
+
+.note {
+  font-size: 0.8em;
+  font-style: italic;
 }

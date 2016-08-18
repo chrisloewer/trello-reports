@@ -16,6 +16,11 @@
 <body>
 
   <h1>Trello Tracking</h1>
+
+
+  <h3>StartDate</h3>
+  <input type="date" name="startDate" id="start-date-picker" onchange="setStartDate(this)"/>
+
   <div id="__board-container"></div>
 
   <div id="__user-container"></div>
@@ -31,6 +36,7 @@
 <!-- TEMPLATES-->
 
 <script id="boards" type="text/x-handlebars-template">
+  <h3>Boards</h3>
   <select class="board-select" onchange="boardChange(this)">
     <option>Select Board</option>
     {{#each .}}
@@ -40,6 +46,7 @@
 </script>
 
 <script id="users" type="text/x-handlebars-template">
+  <h3>Users</h3>
   <select class="member-select" onchange="memberChange(this)">
     <option>Select Member</option>
     {{#each .}}
@@ -65,6 +72,7 @@
     <hr class="mini">
 
     <h3>Time Spread Chart</h3>
+    <div class="note">Tracks actions over a period of time. Intended to show progression.  Numbers represent a category</div>
     <div id="timespread-chart">
       <object type="image/svg+xml" data="loading.svg" class="loading-icon"></object>
     </div>

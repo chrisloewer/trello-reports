@@ -1,14 +1,15 @@
+// Pull recent activity from Trello api to track progress
 
-var boardID = '5767fa41ed4b0326883e368b';
+var boardID = '';
 var resp = null;
-var minTime = new Date("2016-08-10T00:00:00.000Z");
-
+var startTime = new Date("2016-08-10T00:00:00.000Z");
 var authenticationSuccess = function() { console.log('Successful authentication'); };
 var authenticationFailure = function() { console.log('Failed authentication'); };
 var error = function() { console.log('error'); };
 var success = function() {console.log(JSON.parse(resp.responseText))};
 
 
+// Initialize Page
 window.onload = function() {
   Trello.authorize({
     name: 'Getting Started Application',
@@ -23,6 +24,12 @@ window.onload = function() {
   getBoards();
 };
 
+function setStartDate(elem) {
+  startTime = new Date(elem.value);
+}
+
+
+// Populate Page from API
 function getBoards() {
   resp = Trello.get('/members/me/boards', boardLoad, error);
 }
@@ -64,7 +71,7 @@ var activityLoad = function() {
   json = _.filter(json, function(o) {
     if(o.data.board.id == boardID) {
       var d = new Date(o.date);
-      if (d > minTime) {
+      if (d > startTime) {
         if(categoryCount[o.type] == undefined) {
           categoryCount[o.type] = 1;
         }
@@ -77,6 +84,7 @@ var activityLoad = function() {
           catIndex++;
         }
         timeArr.push([d.getTime(), timeArrLegend[o.type]]);
+
         return o;
       }
     }
@@ -103,15 +111,13 @@ var activityLoad = function() {
   }
 
   var timeData = google.visualization.arrayToDataTable(timeArr);
-
   var options = {
     titlePosition:'none',
     legend:'none',
     width:'100%',
     height:400};
-
   var timeOptions = {
-    hAxis: {title: 'Time'},
+    hAxis: {title: 'Time', textPosition: 'none'},
     vAxis: {title: 'Category'},
     height: 500,
     legend: 'none',
@@ -119,7 +125,7 @@ var activityLoad = function() {
     explorer: { actions: ['dragToZoom', 'rightClickToReset'] }
   };
 
-  // Instantiate and draw our chart, passing in some options.
+  // Instantiate and draw charts
   var chart = new google.visualization.ColumnChart(document.getElementById('action-chart'));
   var table = new google.visualization.Table(document.getElementById('action-table'));
   chart.draw(data, options);
@@ -130,17 +136,11 @@ var activityLoad = function() {
   timeChart.draw(timeData, timeOptions);
   timeTable.draw(categoryLegend, {});
 
-  console.log(json);
+  // console.log(json);
 };
 
 
-
-
-
-
-
 // HELPER METHODS
-
 function insertTemplate(templateName, containerName, data) {
   var source   = $('#' + templateName).html();
   var template = Handlebars.compile(source);
