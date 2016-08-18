@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Trello Proof of Concept</title>
-	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script src="https://api.trello.com/1/client.js?key=894a890d7700640e632dda487274429a"></script>
+  <title>Trello Proof of Concept</title>
+  <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="scripts/handlebars-v4.0.5.js"></script>
+  <script type="text/javascript" src="scripts/lodash.core.min.js"></script>
+  <script src="https://api.trello.com/1/client.js?key=894a890d7700640e632dda487274429a"></script>
 
-	<script type="text/javascript" src="scripts.js"></script>
+  <script type="text/javascript" src="scripts/scripts.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Noto+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="styles/index.css">
 </head>
+
 <body>
 
-<button onclick="testAuthorization()">Authorize</button>
+  <h1>Trello Tracking</h1>
 
-<br><br>
+  <button onclick="getMembers()">Load Members</button>
 
-<button onclick="doStuff()">Do Stuff</button>
+  <hr>
 
-<br><br>
+  <div id="__user-container"></div>
 
-<button onclick="loadMembers()">Load Members</button>
+  <hr>
 
 
 </body>
 </html>
+
+
+<!-- TEMPLATES-->
+
+<script id="users" type="text/x-handlebars-template">
+  <div class="entry">
+    {{#each .}}
+      <button data-id="{{id}}" data-username="{{username}}" onclick="getActivities('{{id}}')">{{fullName}}</button>
+    {{/each}}
+  </div>
+</script>
