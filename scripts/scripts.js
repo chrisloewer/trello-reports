@@ -2,6 +2,7 @@
 var boardID = '5767fa41ed4b0326883e368b';
 var resp = null;
 var minTime = new Date("2016-08-10T00:00:00.000Z");
+var tempTime = new Date("2016-08-17T00:00:00.000Z");
 
 var authenticationSuccess = function() { console.log('Successful authentication'); };
 var authenticationFailure = function() { console.log('Failed authentication'); };
@@ -19,7 +20,7 @@ window.onload = function() {
     error: authenticationFailure
   });
 
-  google.charts.load('current', {'packages':['corechart']});
+  google.charts.load('current', {'packages':['corechart', 'table']});
   getBoards();
 };
 
@@ -51,40 +52,54 @@ function memberChange(elem) {
 
 function getActivities(id, name) {
   resp = Trello.get('/members/' + id + '/actions?limit=500', activityLoad, error);
-
-  //  Insert template for chart area
   insertTemplate('charts', '__chart-container', {name: name});
 }
 var activityLoad = function() {
   var json = JSON.parse(resp.responseText);
-  var dictionary = {};
+  var categoryCount = {};
+  var timeArr = [['Time', 'Category']];
+  var timeArrLegend = {};
+  var catIndex = 1;
+  var date = new Date;
 
   // Filter Data
   json = _.filter(json, function(o) {
     if(o.data.board.id == boardID) {
       var d = new Date(o.date);
       if (d > minTime) {
-        if(dictionary[o.type] == undefined) {
-          dictionary[o.type] = 1;
+        if(categoryCount[o.type] == undefined) {
+          categoryCount[o.type] = 1;
         }
         else {
-          dictionary[o.type]++;
+          categoryCount[o.type]++;
         }
+
+        if(d > tempTime) {
+          if (timeArrLegend[o.type] == undefined) {
+            timeArrLegend[o.type] = catIndex;
+            catIndex++;
+          }
+          timeArr.push([d.getTime(), timeArrLegend[o.type]]);
+        }
+
+
         return o;
       }
     }
   });
 
-  // Draw Chart
+  // Prepare Data
   var data = new google.visualization.DataTable();
   data.addColumn('string', 'Label');
   data.addColumn('number', 'Amount');
-  for(var p in dictionary) {
+  for(var p in categoryCount) {
     data.addRows([
-       [p, dictionary[p]]
+       [p, categoryCount[p]]
     ]);
   }
   data.sort('Label');
+
+  var timeData = google.visualization.arrayToDataTable(timeArr);
 
   var options = {
     titlePosition:'none',
@@ -92,12 +107,24 @@ var activityLoad = function() {
     width:'100%',
     height:400};
 
+  var timeOptions = {
+    hAxis: {title: 'Time'},
+    height: 500,
+    legend: 'none',
+    pointSize: 1
+  };
+
   // Instantiate and draw our chart, passing in some options.
   var chart = new google.visualization.ColumnChart(document.getElementById('action-chart'));
+  var table = new google.visualization.Table(document.getElementById('action-table'));
   chart.draw(data, options);
+  table.draw(data, {});
+
+  var timeChart = new google.visualization.ScatterChart(document.getElementById('timespread-chart'));
+  timeChart.draw(timeData, timeOptions);
 
   console.log(json);
-  console.log(dictionary);
+  console.log(categoryCount);
 };
 
 
