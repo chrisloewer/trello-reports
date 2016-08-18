@@ -1,3 +1,6 @@
+* {
+  font-family: inherit; }
+
 body {
   font-family: 'Noto Sans', sans-serif;
   text-align: center; }
@@ -6,9 +9,19 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', sans-serif; }
 
 button {
-  font-family: inherit;
   padding: 10px 20px;
   margin: 20px;
   background: #DDD; }
+
+select {
+  padding: 5px 10px;
+  margin: 10px;
+  min-width: 200px; }
+
+hr {
+  border: none;
+  height: 2px;
+  background-color: black;
+  margin: 30px 0; }
 
 /*# sourceMappingURL=index.css.map */

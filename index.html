@@ -5,6 +5,7 @@
   <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
   <script type="text/javascript" src="scripts/handlebars-v4.0.5.js"></script>
   <script type="text/javascript" src="scripts/lodash.core.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://api.trello.com/1/client.js?key=894a890d7700640e632dda487274429a"></script>
 
   <script type="text/javascript" src="scripts/scripts.js"></script>
@@ -15,14 +16,12 @@
 <body>
 
   <h1>Trello Tracking</h1>
-
-  <button onclick="getMembers()">Load Members</button>
-
-  <hr>
+  <div id="__board-container"></div>
 
   <div id="__user-container"></div>
-
   <hr>
+
+  <div id="__chart-container"></div>
 
 
 </body>
@@ -31,10 +30,29 @@
 
 <!-- TEMPLATES-->
 
-<script id="users" type="text/x-handlebars-template">
-  <div class="entry">
+<script id="boards" type="text/x-handlebars-template">
+  <select class="board-select" onchange="boardChange(this)">
+    <option>Select Board</option>
     {{#each .}}
-      <button data-id="{{id}}" data-username="{{username}}" onclick="getActivities('{{id}}')">{{fullName}}</button>
+      <option value="{{id}}">{{name}}</option>
     {{/each}}
+  </select>
+</script>
+
+<script id="users" type="text/x-handlebars-template">
+  <select class="member-select" onchange="memberChange(this)">
+    <option>Select Member</option>
+    {{#each .}}
+      <option value="{{id}}" data-username="{{fullName}}">{{fullName}}</option>
+    {{/each}}
+  </select>
+</script>
+
+<script id="charts" type="text/x-handlebars-template">
+  <div class="chart">
+    <h2>{{name}}</h2>
+
+    <h3>Actions-chart</h3>
+    <div id="action-chart"></div>
   </div>
 </script>
