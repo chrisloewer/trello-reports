@@ -20,7 +20,7 @@ button {
   margin: 20px;
   background: #DDD; }
 
-select, input {
+select, input[type=date] {
   padding: 5px 10px;
   margin: 10px;
   min-width: 200px; }

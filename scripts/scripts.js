@@ -2,7 +2,6 @@
 
 var boardID = '';
 var resp = null;
-var startTime = new Date("2016-08-10T00:00:00.000Z");
 var authenticationSuccess = function() { console.log('Successful authentication'); };
 var authenticationFailure = function() { console.log('Failed authentication'); };
 var error = function() { console.log('error'); };
@@ -12,7 +11,7 @@ var success = function() {console.log(JSON.parse(resp.responseText))};
 // Initialize Page
 window.onload = function() {
   Trello.authorize({
-    name: 'Getting Started Application',
+    name: 'Trello Analytics',
     scope: {
       read: true,
       write: true },
@@ -22,10 +21,21 @@ window.onload = function() {
 
   google.charts.load('current', {'packages':['corechart', 'table']});
   getBoards();
+
+  var today = new Date;
+  var todayString = today.getUTCFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + (today.getDate())).slice(-2);
+  document.getElementById('start-date-picker').value = todayString;
 };
 
-function setStartDate(elem) {
-  startTime = new Date(elem.value);
+function setStartDate() {
+  // var elem = document.getElementById('start-date-picker');
+  var memberPicker = document.getElementById('member-picker');
+  //
+  // startTime = new Date(elem.value);
+
+  if(memberPicker.options[memberPicker.selectedIndex].dataset.username) {
+    getActivities();
+  }
 }
 
 
@@ -50,13 +60,13 @@ var memberLoad = function() {
   var response = JSON.parse(resp.responseText);
   insertTemplate('users', '__user-container', response);
 };
-function memberChange(elem) {
+
+
+function getActivities() {
+  var elem = document.getElementById('member-picker');
   var name = elem.options[elem.selectedIndex].dataset.username;
-  getActivities(elem.value, name);
-}
+  var id = elem.value;
 
-
-function getActivities(id, name) {
   resp = Trello.get('/members/' + id + '/actions?limit=500', activityLoad, error);
   insertTemplate('charts', '__chart-container', {name: name});
 }
@@ -66,28 +76,37 @@ var activityLoad = function() {
   var timeArr = [['Time', 'Category']];
   var timeArrLegend = {};
   var catIndex = 0;
+  var boardFilter = document.getElementById('board-filter-checkbox');
 
   // Filter Data
   json = _.filter(json, function(o) {
-    if(o.data.board.id == boardID) {
-      var d = new Date(o.date);
-      if (d > startTime) {
-        if(categoryCount[o.type] == undefined) {
-          categoryCount[o.type] = 1;
-        }
-        else {
-          categoryCount[o.type]++;
-        }
 
-        if (timeArrLegend[o.type] == undefined) {
-          timeArrLegend[o.type] = catIndex;
-          catIndex++;
-        }
-        timeArr.push([d.getTime(), timeArrLegend[o.type]]);
+    var elem = document.getElementById('start-date-picker');
+    var startTime = new Date(elem.value);
 
-        return o;
-      }
+    if(boardFilter.checked && o.data.board.id != boardID) {
+      return;
     }
+
+    var d = new Date(o.date);
+
+    if (d > startTime) {
+      if(categoryCount[o.type] == undefined) {
+        categoryCount[o.type] = 1;
+      }
+      else {
+        categoryCount[o.type]++;
+      }
+
+      if (timeArrLegend[o.type] == undefined) {
+        timeArrLegend[o.type] = catIndex;
+        catIndex++;
+      }
+      timeArr.push([d.getTime(), timeArrLegend[o.type]]);
+
+      return o;
+    }
+
   });
 
   // Prepare Data
