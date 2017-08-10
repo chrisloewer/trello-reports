@@ -53,6 +53,7 @@
   <h3>Users</h3>
   <select class="member-select" onchange="getActivities()" id="member-picker">
     <option>Select Member</option>
+    <option value="-1" data-username="All Users">-- All Users --</option>
     {{#each .}}
       <option value="{{id}}" data-username="{{fullName}}">{{fullName}}</option>
     {{/each}}

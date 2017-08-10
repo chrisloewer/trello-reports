@@ -67,12 +67,14 @@ function getActivities() {
   var name = elem.options[elem.selectedIndex].dataset.username;
   var id = elem.value;
 
-  resp = Trello.get('/members/' + id + '/actions?limit=1500', activityLoad, error);
-  insertTemplate('charts', '__chart-container', {name: name});
-}
-
-function getBoardActivities() {
-  resp = Trello.get('/boards/' + boardID + '/actions?limit=1500', activityLoad, error);
+  if(id == -1) {
+    // No user selected, show entire board results
+    resp = Trello.get('/boards/' + boardID + '/actions?limit=1000', activityLoad, error);
+  }
+  else {
+    // Only show user selected
+    resp = Trello.get('/members/' + id + '/actions?limit=1000', activityLoad, error);
+  }
   insertTemplate('charts', '__chart-container', {name: name});
 }
 
